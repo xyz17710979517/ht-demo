@@ -2,15 +2,16 @@ import axios from 'axios';
 
 // import { Loading, Message } from 'element-ui';
 
-import config from '../config';
+// import config from '../config';
 
-let { baseUrl } = config;
+// let { baseUrl } = config;
 
 // let loading;
 
 const Server = axios.create({
-    baseURL: baseUrl,
-    timeout: 100000,
+    baseURL: '',
+    timeout: 5000,
+    withCredentials: true
 })
 Server.interceptors.request.use(config => {
     // if (!config.hideloading) {

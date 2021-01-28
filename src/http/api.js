@@ -9,7 +9,20 @@ function login(data) { //登录
         data: qs.stringify(data)
     })
 }
-
+function commodity(data) {
+    return Server({
+        url: user.commodity + data,
+        method: 'get',
+    })
+}
+function search(name, val) {
+    return Server({
+        url: user.search + name + '=' + val,
+        method: 'get',
+    })
+}
 export default {
     login,
+    commodity,
+    search
 }
