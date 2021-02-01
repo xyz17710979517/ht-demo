@@ -21,8 +21,36 @@ function search(name, val) {
         method: 'get',
     })
 }
+function setsale(id, status) {
+    return Server({
+        url: `/api/manage/product/set_sale_status.do?productId=${id}&status=${status}`,
+        method: 'get',
+    })
+}
+function detailTo(id) {
+    return Server({
+        url: `/api/manage/product/detail.do?productId=${id}`,
+        mthode: 'get'
+    })
+}
+function selectList(){
+    return Server({
+        url:'/api/manage/category/get_category.do?categoryId=0',
+        method:'get'
+    })
+}
+function selectList2(id){
+    return Server({
+        url:`/api/manage/category/get_category.do?categoryId=${id}`,
+        method:'get'
+    })
+}
 export default {
     login,
     commodity,
-    search
+    search,
+    setsale,
+    detailTo,
+    selectList,
+    selectList2
 }

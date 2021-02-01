@@ -3,7 +3,7 @@
   <div class="container_box">
     <header class="header_top">
       <p>商品管理</p>
-      <el-button style="background: #337ab7; color: #fff" icon="el-icon-plus"
+      <el-button style="background: #337ab7; color: #fff" icon="el-icon-plus" @click='addList'
         >添加商品</el-button
       >
     </header>
@@ -46,17 +46,22 @@
       <el-table-column label="价格" prop="price"></el-table-column>
       <el-table-column label="状态">
         <template slot-scope="scope">
-          <span v-show="scope.row.status == 1">在售</span>
-          <span v-show="scope.row.status == 2">已下架</span>
-          <el-button type="warning" size="mini" style="margin-left: 10px"
-            >下架</el-button
+          <span>{{ scope.row.status == 1 ? "在售" : "已下架" }}</span>
+          <el-button
+            type="warning"
+            size="mini"
+            style="margin-left: 10px"
+            @click="setsale(scope.row.id, scope.row.status)"
+            >{{ scope.row.status == 1 ? "下架" : "上架" }}</el-button
           >
         </template>
       </el-table-column>
       <el-table-column label="操作">
-        <template>
-          <el-button type="primary">查看</el-button>
-          <el-button type="primary">编辑</el-button>
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" @click="detail(scope.row.id)"
+            >查看</el-button
+          >
+          <el-button type="primary" size="mini">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -109,12 +114,8 @@ export default {
     },
     async spList() {
       const res = await this.$http.commodity(1).then((res) => {
-        if (res.data.status == 0) {
-          this.tableList = res.data.data.list;
-          this.total = res.data.data.total;
-        } else {
-          this.$message.error("数据请求失败");
-        }
+        this.tableList = res.data.data.list;
+        this.total = res.data.data.total;
       });
     },
     // 分页
@@ -135,6 +136,34 @@ export default {
       this.tableList = res.data.list;
       this.total = res.data.total;
     },
+    // 商品状态
+    setsale(id, zt) {
+      let status, name;
+      console.log(zt);
+      if (zt == 1) {
+        status = 2;
+        name = "确定下架该商品？";
+      } else {
+        status = 1;
+        name = "确定上架该商品?";
+      }
+      let set = confirm(name);
+      if (set == true) {
+        this.$http.setsale(id, status).then((res) => {
+          console.log(res);
+          if (res.data.status == 0) {
+            alert(res.data.data);
+            this.spList();
+          }
+        });
+      }
+    },
+    detail(id) {
+      this.$router.push(`/detail/${id}`);
+    },
+    addList() {
+      this.$router.push('/save')
+    }
   },
   // 以下是生命周期钩子 注：没用到的钩子请自行删除
   /**

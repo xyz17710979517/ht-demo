@@ -14,4 +14,8 @@ html,body,#app{
 p{
   margin: 10px;
 }
+h1{ 
+  padding: 0;
+  margin: 0;
+}
 </style>

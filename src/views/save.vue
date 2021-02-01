@@ -1,26 +1,37 @@
 
 <template>
-  <div class="container">
-    <div class="login_box">
-      <div class="header">欢迎登录 - MNALL管理系统</div>
-      <el-form
-        :model="loginRuleForm"
-        :rules="loginRules"
-        ref="ruleForm"
-        label-width="0"
-        class="loginForm"
-      >
-        <el-form-item prop="username">
-          <el-input v-model="loginRuleForm.username"></el-input>
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input v-model="loginRuleForm.password" type="password"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="login('ruleForm')">登录</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+  <div class="container_box">
+    <div class="header">商品管理 -- 添加商品</div>
+    <!-- 表单区域 -->
+    <el-form ref="form" :model="form" label-width="80px">
+      <el-form-item label="商品名称">
+        <el-input v-model="form.name" placeholder="请输入商品名称"></el-input>
+      </el-form-item>
+      <el-form-item label="商品描述">
+        <el-input
+          v-model="form.subtitle"
+          placeholder="请输入商品描述"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="所属分类">
+        <el-select placeholder="请输入一级分类">
+          <el-option> </el-option>
+        </el-select>
+        <el-select placeholder="请输入二级分类">
+          <el-option> </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="商品价格">
+        <el-input placeholder="价格" type="number" v-model="form.price">
+          <el-button slot="append">元</el-button>
+        </el-input>
+      </el-form-item>
+      <el-form-item label="商品库存">
+        <el-input placeholder="库存" type="number" v-model="form.stock">
+          <el-button slot="append">件</el-button>
+        </el-input>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
@@ -35,17 +46,16 @@ export default {
   // 组件状态值
   data() {
     return {
-      loginRuleForm: {
-        username: "admin",
-        password: "admin",
+      form: {
+        name: "",
+        price: "",
+        subtitle: "",
+        stock: "",
       },
-      loginRules: {
-        username: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
-        ],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
-      },
-      
+      value: "",
+      value1: "",
+      options: [],
+      options1: [],
     };
   },
   // 计算属性
@@ -54,18 +64,10 @@ export default {
   watch: {},
   // 组件方法
   methods: {
-    async login(formName) {
-      this.$refs[formName].validate(async (valid) => {
-        if (valid) {
-          const res = await this.$http.login(this.loginRuleForm)
-          if(res.data.status == 0){
-            this.$message.success(res.data.msg)
-            this.$router.push('/home');
-          }else{
-            this.$message.error(res.data.msg);
-          }
-        }
-      });
+    async select1() {
+      const { data: res } = await this.$http.selectList();
+      console.log(res);
+      this.options = res.data;
     },
   },
   // 以下是生命周期钩子 注：没用到的钩子请自行删除
@@ -76,7 +78,9 @@ export default {
   /**
    * 组件实例创建完成，属性已绑定，但DOM还未生成，$ el属性还不存在
    */
-  created() {},
+  created() {
+    this.select1();
+  },
   /**
    * 在挂载开始之前被调用：相关的 render 函数首次被调用。
    */
@@ -117,37 +121,12 @@ export default {
 </script> 
 
 <style lang="scss" scoped>
-.container {
-  width: 100%;
-  height: 100%;
-  background-color: #f3f3f3;
-  .login_box {
-    width: 450px;
-    height: 270px;
-    background-color: #fff;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    .header {
-      width: 100%;
-      height: 60px;
-      font-size: 18px;
-      line-height: 60px;
-      padding-left: 20px;
-      box-sizing: border-box;
-    }
-  }
-}
-.loginForm {
-  position: absolute;
-  padding: 20px;
+.header {
+  border-bottom: 1px solid #eeee;
+  font-size: 28px;
+  color: #666666;
+  padding-bottom: 10px;
   box-sizing: border-box;
-  top: 60px;
-  width: 100%;
-}
-.el-button {
-  width: 100%;
+  margin: 20px 0;
 }
 </style>
-
