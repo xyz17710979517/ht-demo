@@ -14,11 +14,27 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="所属分类">
-        <el-select placeholder="请输入一级分类">
-          <el-option> </el-option>
+        <el-select
+          placeholder="请输入一级分类"
+          v-model="value"
+          @change="changFlag"
+          style="margin-right: 10px"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          >
+          </el-option>
         </el-select>
-        <el-select placeholder="请输入二级分类">
-          <el-option> </el-option>
+        <el-select placeholder="请输入二级分类" v-model="value1">
+          <el-option
+            v-for="item in options1"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="商品价格">
@@ -30,6 +46,10 @@
         <el-input placeholder="库存" type="number" v-model="form.stock">
           <el-button slot="append">件</el-button>
         </el-input>
+      </el-form-item>
+      <el-form-item label="商品图片"> </el-form-item>
+      <el-form-item label="商品详情">
+        <quill-editor v-model="form.goods_introduce"></quill-editor>
       </el-form-item>
     </el-form>
   </div>
@@ -51,6 +71,7 @@ export default {
         price: "",
         subtitle: "",
         stock: "",
+        goods_introduce: "",
       },
       value: "",
       value1: "",
@@ -59,6 +80,7 @@ export default {
     };
   },
   // 计算属性
+
   computed: {},
   // 侦听器
   watch: {},
@@ -66,8 +88,14 @@ export default {
   methods: {
     async select1() {
       const { data: res } = await this.$http.selectList();
-      console.log(res);
       this.options = res.data;
+    },
+    async changFlag(ev) {
+      const { data: res } = await this.$http.selectList2(ev);
+      this.options1 = res.data;
+    },
+    handlePictureCardPreview(e) {
+      console.log(e);
     },
   },
   // 以下是生命周期钩子 注：没用到的钩子请自行删除
@@ -80,6 +108,7 @@ export default {
    */
   created() {
     this.select1();
+    // this.select2();
   },
   /**
    * 在挂载开始之前被调用：相关的 render 函数首次被调用。
@@ -128,5 +157,31 @@ export default {
   padding-bottom: 10px;
   box-sizing: border-box;
   margin: 20px 0;
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+.quill-editor {
+  min-height: 100px;
 }
 </style>

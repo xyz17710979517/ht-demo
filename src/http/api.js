@@ -33,16 +33,46 @@ function detailTo(id) {
         mthode: 'get'
     })
 }
-function selectList(){
+function selectList() {
     return Server({
-        url:'/api/manage/category/get_category.do?categoryId=0',
-        method:'get'
+        url: '/api/manage/category/get_category.do?categoryId=0',
+        method: 'get'
     })
 }
-function selectList2(id){
+function selectList2(id) {
     return Server({
-        url:`/api/manage/category/get_category.do?categoryId=${id}`,
-        method:'get'
+        url: `/api/manage/category/get_category.do?categoryId=${id}`,
+        method: 'get'
+    })
+}
+function cateGory() {
+    return Server({
+        url: '/api/manage/category/get_category.do?categoryId=0',
+        method: 'get'
+    })
+}
+function edit(id, name) {
+    return Server({
+        url: `/api/manage/category/set_category_name.do?categoryId=${id}&categoryName=${name}`,
+        method: 'get'
+    })
+}
+function detailCate(id) {
+    return Server({
+        url: `/api/manage/category/get_category.do?categoryId=${id}`,
+        method: 'get'
+    })
+}
+function edits(id, name) {
+    return Server({
+        url: `/api/manage/category/set_category_name.do?categoryId=${id}&categoryName=${name}`,
+        method: 'get'
+    })
+}
+function add(id, name) {
+    return Server({
+        url: `/api/manage/category/add_category.do?parentId=${id}&categoryName=${name}`,
+        method: 'get',
     })
 }
 export default {
@@ -52,5 +82,10 @@ export default {
     setsale,
     detailTo,
     selectList,
-    selectList2
+    selectList2,
+    cateGory,
+    edit,
+    detailCate,
+    edits,
+    add
 }

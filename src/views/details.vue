@@ -1,28 +1,19 @@
 
 <template>
-  <div class="container_box">
+  <div>
     <header class="header_top">
       <p>品类管理</p>
-      <el-button style="background: #337ab7; color: #fff" @click="addCate" icon="el-icon-plus"
+      <el-button style="background: #337ab7; color: #fff" icon="el-icon-plus"
         >添加品类</el-button
       >
     </header>
-    <p style="margin-top: 15px">当前商品分类ID：0</p>
-    <!-- 表格区域 -->
-    <el-table :data="cateList" stripe border>
-      <el-table-column label="商品ID" prop="id"></el-table-column>
+    <p style="margin-top: 15px">当前商品分类ID：{{ id }}</p>
+    <el-table :data="detailList" border stripe>
+      <el-table-column label="品类ID" prop="id"></el-table-column>
       <el-table-column label="品类名称" prop="name"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <a
-            href="#"
-            class="opera"
-            @click="editCateGory(scope.row.id, scope.row.name)"
-            >修改名称</a
-          >
-          <el-button type="primary" @click="detail(scope.row.id)" size="mini"
-            >查看其子品类</el-button
-          >
+          <a href="#" @click="editss(scope.row.id, scope.row.name)">修改名称</a>
         </template>
       </el-table-column>
     </el-table>
@@ -40,7 +31,8 @@ export default {
   // 组件状态值
   data() {
     return {
-      cateList: [],
+      id: "",
+      detailList: [],
     };
   },
   // 计算属性
@@ -49,31 +41,22 @@ export default {
   watch: {},
   // 组件方法
   methods: {
-    setCateGory() {
-      this.$http.cateGory().then((res) => {
-        if (res.data.status == 0) {
-          this.cateList = res.data.data;
-        }
-      });
-    },
-    editCateGory(id, name) {
-      let b = prompt("请输入新的品类名称", name);
-      if (b == null || b == "") {
+    editss(id, name) {
+      let a = prompt("请输入新的品类名称", name);
+      if (a == null || a == "") {
         alert("请输入正确得品类名称");
         return;
       }
-      this.$http.edit(id, b).then((res) => {
-        console.log(res);
+      this.$http.edits(id, a).then((res) => {
         alert(res.data.data);
-        this.setCateGory();
+        this.setList;
       });
     },
-    detail(id) {
-      this.$router.push(`/details/${id}`);
+    setList() {
+      this.$http.detailCate(this.id).then((res) => {
+        this.detailList = res.data.data;
+      });
     },
-    addCate() {
-        this.$router.push('/add') 
-    }
   },
   // 以下是生命周期钩子 注：没用到的钩子请自行删除
   /**
@@ -84,7 +67,8 @@ export default {
    * 组件实例创建完成，属性已绑定，但DOM还未生成，$ el属性还不存在
    */
   created() {
-    this.setCateGory();
+    this.id = this.$route.params.id;
+    this.setList()
   },
   /**
    * 在挂载开始之前被调用：相关的 render 函数首次被调用。
@@ -124,6 +108,7 @@ export default {
   destroyed() {},
 };
 </script> 
+
 <style lang="scss" scoped>
 .header_top {
   display: flex;
@@ -134,13 +119,5 @@ export default {
     font-size: 30px;
     color: #666666;
   }
-}
-.opera {
-  margin-right: 10px;
-  cursor: pointer;
-}
-a {
-  color: #337ab7;
-  text-decoration: none;
 }
 </style>

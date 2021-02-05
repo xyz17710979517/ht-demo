@@ -45,6 +45,16 @@ const routes = [
         path:'/save',
         name:'save',
         component: () => import('../views/save.vue')
+      },
+      {
+        path:'/details/:id',
+        name:'details',
+        component: () => import('../views/details.vue')
+      },
+      {
+        path:'/add',
+        name:'add',
+        component: () => import('../views/add.vue')
       }
     ]
   }

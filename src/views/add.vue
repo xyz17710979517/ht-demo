@@ -1,31 +1,33 @@
 
 <template>
-  <div class="container_box">
+  <div>
     <header class="header_top">
-      <p>品类管理</p>
-      <el-button style="background: #337ab7; color: #fff" @click="addCate" icon="el-icon-plus"
-        >添加品类</el-button
-      >
+      <p>品类管理 -- 添加分类</p>
     </header>
-    <p style="margin-top: 15px">当前商品分类ID：0</p>
-    <!-- 表格区域 -->
-    <el-table :data="cateList" stripe border>
-      <el-table-column label="商品ID" prop="id"></el-table-column>
-      <el-table-column label="品类名称" prop="name"></el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <a
-            href="#"
-            class="opera"
-            @click="editCateGory(scope.row.id, scope.row.name)"
-            >修改名称</a
+    <el-form
+      ref="form"
+      :model="form"
+      label-width="80px"
+      style="margin-top: 20px"
+    >
+      <el-form-item label="所属商品">
+        <el-select v-model="value" placeholder="/所有" @change="adds">
+          <el-option
+            v-for="item in options"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
           >
-          <el-button type="primary" @click="detail(scope.row.id)" size="mini"
-            >查看其子品类</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="品类名称">
+        <el-input placeholder="请输入品类名称" v-model="form.name"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="addCate">提交</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
@@ -40,7 +42,12 @@ export default {
   // 组件状态值
   data() {
     return {
-      cateList: [],
+      form: {
+        name: "",
+      },
+      options: [],
+      value: "",
+      id: "",
     };
   },
   // 计算属性
@@ -49,31 +56,21 @@ export default {
   watch: {},
   // 组件方法
   methods: {
-    setCateGory() {
+    selects() {
       this.$http.cateGory().then((res) => {
-        if (res.data.status == 0) {
-          this.cateList = res.data.data;
-        }
-      });
-    },
-    editCateGory(id, name) {
-      let b = prompt("请输入新的品类名称", name);
-      if (b == null || b == "") {
-        alert("请输入正确得品类名称");
-        return;
-      }
-      this.$http.edit(id, b).then((res) => {
         console.log(res);
-        alert(res.data.data);
-        this.setCateGory();
+        this.options = res.data.data;
       });
     },
-    detail(id) {
-      this.$router.push(`/details/${id}`);
+    adds(e) {
+      this.id = e;
     },
     addCate() {
-        this.$router.push('/add') 
-    }
+      this.$http.add(this.id, this.form.name).then((res) => {
+        alert(res.data.data);
+        this.$router.go(-1)
+      });
+    },
   },
   // 以下是生命周期钩子 注：没用到的钩子请自行删除
   /**
@@ -84,7 +81,7 @@ export default {
    * 组件实例创建完成，属性已绑定，但DOM还未生成，$ el属性还不存在
    */
   created() {
-    this.setCateGory();
+    this.selects();
   },
   /**
    * 在挂载开始之前被调用：相关的 render 函数首次被调用。
@@ -126,21 +123,11 @@ export default {
 </script> 
 <style lang="scss" scoped>
 .header_top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   border-bottom: 1px solid #eeee;
+
   p {
     font-size: 30px;
     color: #666666;
   }
-}
-.opera {
-  margin-right: 10px;
-  cursor: pointer;
-}
-a {
-  color: #337ab7;
-  text-decoration: none;
 }
 </style>
