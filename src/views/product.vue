@@ -114,8 +114,8 @@ export default {
     },
     async spList() {
       const res = await this.$http.commodity(1).then((res) => {
-        this.tableList = res.data.data.list;
-        this.total = res.data.data.total;
+        this.tableList = res.data.list;
+        this.total = res.data.total;
       });
     },
     // 分页

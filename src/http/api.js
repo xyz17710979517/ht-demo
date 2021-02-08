@@ -75,6 +75,24 @@ function add(id, name) {
         method: 'get',
     })
 }
+function orderList(data) {
+    return Server({
+        url:`/api/manage/order/list.do?pageNum=${data}`,
+        method:'get'
+    })
+}
+function searchs(num){
+    return Server({
+        url:`/api/manage/order/search.do?listType=search&pageNum=1&orderNo=${num}`,
+        method: 'get'
+    })
+}
+function orderdetails(id) {
+    return Server({
+        url:`/api/manage/order/detail.do?orderNo=${id}`,
+        method:'get'
+    })
+}
 export default {
     login,
     commodity,
@@ -87,5 +105,8 @@ export default {
     edit,
     detailCate,
     edits,
-    add
+    add,
+    orderList,
+    searchs,
+    orderdetails
 }

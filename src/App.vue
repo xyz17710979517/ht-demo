@@ -11,9 +11,6 @@ html,body,#app{
   width: 100%;
   height: 100%;
 }
-p{
-  margin: 10px;
-}
 h1{ 
   padding: 0;
   margin: 0;
